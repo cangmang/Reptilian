@@ -30,7 +30,7 @@ class ProgressBar(object):
 
     def download(self, url, save_path):
         with closing(requests.get(url, stream=True)) as response:
-            chunk_size = 1024  # 单次请求最大值
+            chunk_size = 40960  # 单次请求最大值
             self.total = int(response.headers['content-length'])  # 内容体总大小
             with open(save_path, "wb") as file:
                 for data in response.iter_content(chunk_size=chunk_size):
