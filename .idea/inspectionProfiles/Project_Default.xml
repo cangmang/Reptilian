@@ -6,6 +6,7 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="pymssql" />
+          <option value="urllib.request" />
         </list>
       </option>
     </inspection_tool>

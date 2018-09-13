@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+from contextlib import closing
+
+from api.ProgressBar import ProgressBar
+
+
 __author__ = 'xujianbo'
 __date__ = '2018/9/13'
 """
@@ -29,7 +34,6 @@ def download(url):
         path = os.path.join(directory_path, title.encode("gbk") + ".mp4")
         download_url = \
             SendHttpRequest().get("http://www.icoolxue.com/video/play/url/" + ur.split("/")[-1], headers=header)["data"]
-        with open(path, 'wb') as fp:
-            fp.write(requests.get(download_url).content)
-        fp.close()
-        print("当前视频：" + title + "下载完成！")
+        print title + ": 下载中........"
+        ProgressBar().download(download_url, path)
+        print "\n下载完成"
