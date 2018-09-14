@@ -28,7 +28,8 @@ class ProgressBar(object):
     @:param save_path 保存路径
     """
 
-    def download(self, url, save_path):
+    def download(self, url, save_path, title):
+        print "\n" + title + ": 开始下载........"
         with closing(requests.get(url, stream=True)) as response:
             chunk_size = 40960  # 单次请求最大值
             self.total = int(response.headers['content-length'])  # 内容体总大小
@@ -36,3 +37,5 @@ class ProgressBar(object):
                 for data in response.iter_content(chunk_size=chunk_size):
                     file.write(data)
                     self.__view_bar(count=len(data))
+            file.close()
+        print "\n" + title + "下载完成"
