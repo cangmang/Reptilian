@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
+import time
+import urllib
+import sys
+
 __author__ = 'Administrator'
 __date__ = '2018/9/13'
 from contextlib import closing
-import requests
+from api.HttpRequest import SendHttpRequest
+from api.PyApiLog import log
 
 """
 下载文件并显示下载进度
@@ -30,11 +35,17 @@ class ProgressBar(object):
 
     def download(self, url, save_path, title):
         print "\n" + title + ": 开始下载........"
-        with closing(requests.get(url, stream=True)) as response:
-            chunk_size = 40960  # 单次请求最大值
+        urllib.urlretrieve(url, save_path)
+        header = {
+        "Connection": "keep-alive",
+        "Host": "video.icoolxue.com"
+        }
+        with closing(SendHttpRequest().get(url, headers=header, stream=True)) as response:
+            chunk_size = 2048  # 单次请求最大值
             self.total = int(response.headers['content-length'])  # 内容体总大小
+            content = response.iter_content(chunk_size=chunk_size)
             with open(save_path, "wb") as file:
-                for data in response.iter_content(chunk_size=chunk_size):
+                for data in content:
                     file.write(data)
                     self.__view_bar(count=len(data))
             file.close()

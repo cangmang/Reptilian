@@ -15,11 +15,7 @@ class SendHttpRequest:
         reload(sys)
         sys.setdefaultencoding('utf-8')
 
-
-
-    def post(self, url, value, headers=None, timeout=3):
-        if headers == None:
-            headers = self.header
+    def post(self, url, value, headers=None, timeout=15):
         params = urllib.urlencode(value)
         try:
             req = requests.post(url + "?%s" % params, headers=headers, timeout=timeout)
@@ -33,8 +29,6 @@ class SendHttpRequest:
         return req.json()
 
     def postJsonValue(self, url, value=None, headers=None, timeout=3):
-        if headers == None:
-            headers = self.header
         try:
             req = requests.post(url, data=value, headers=headers, timeout=timeout)
             print req.url
@@ -48,20 +42,16 @@ class SendHttpRequest:
             log().error(u"发送post请求: %s   服务器返回:  %s\n error info: %s " % (req.url, req.status_code, req.text))
             print req.json()
 
-    def get(self, url, value=None, headers=None, timeout=3):
-        if headers == None:
-            headers = self.header
+    def get(self, url, value=None, headers=None, timeout=5, stream=None):
         try:
-            req = requests.get(url, params=value, headers=headers, timeout=timeout)
+            req = requests.get(url, params=value, headers=headers, timeout=timeout, stream=stream)
         except Exception, err:
-            log().error("接口" + url + "请求失败：" + err.message)
-            print err.message
-        if req.status_code == 200:
-            log().info(u"发送get请求: %s   服务器返回:  %s" % (req.url, req.status_code))
-        else:
-            log().error(u"发送get请求: %s   服务器返回:  %s\n error info: %s " % (req.url, req.status_code, req.text))
+            log().error("接口" + url + "请求失败：" + str(err.message))
+        if req.status_code != 200:
+            log().info(u"发送get请求: %s   服务器返回:  %s\n error info: %s " % (req.url, req.status_code, req.text))
             print req.text
-        return req.json()
+            log().error(u"发送get请求: %s   服务器返回:  %s\n error info: %s " % (req.url, req.status_code, req.text))
+        return req
 
     def urlOpen(self, url):
         return urllib.urlopen(url).read()

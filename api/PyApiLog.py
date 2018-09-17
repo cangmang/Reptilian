@@ -15,7 +15,7 @@ logLevel = {
     5: logging.ERROR,
     6: logging.CRITICAL
 }
-root_dir = os.path.dirname(os.path.dirname(__file__))
+root_dir = os.path.dirname(__file__)
 loggers = {}
 # 定义日志方法,从配置文件读取日志等级,且定义日志输出路径
 def log(**kwargs):
